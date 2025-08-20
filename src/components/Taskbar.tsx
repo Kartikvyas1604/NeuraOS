@@ -19,7 +19,7 @@ export const Taskbar = ({ windows, onWindowClick, onAppOpen }: TaskbarProps) => 
   };
 
   const getAppIcon = (component: string) => {
-    const icons: Record<string, any> = {
+    const icons: Record<string, React.ComponentType> = {
       FileManager: Folder,
       NotesApp: FileText,
       CodeEditor: Code,

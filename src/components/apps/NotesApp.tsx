@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Plus, Save, FileText, Star, Search, AlertCircle, Sparkles, Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,13 +33,7 @@ export const NotesApp = () => {
   const { isConnected } = useWallet();
   const { generateResponse, loading: aiLoading } = useGemini();
 
-  useEffect(() => {
-    if (user) {
-      loadNotes();
-    }
-  }, [user]);
-
-  const loadNotes = async () => {
+  const loadNotes = useCallback(async () => {
     if (!user) return;
     
     try {
@@ -49,30 +43,32 @@ export const NotesApp = () => {
         .eq('user_id', user.id)
         .order('updated_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error loading notes:', error);
+        return;
+      }
 
-      const formattedNotes: Note[] = data.map(note => ({
-        id: note.id,
-        title: note.title,
-        content: note.content || '',
-        isImportant: false, // You can add this field to your database if needed
-        created_at: note.created_at,
-        updated_at: note.updated_at
-      }));
-
-      setNotes(formattedNotes);
-      if (formattedNotes.length > 0 && !selectedNote) {
-        setSelectedNote(formattedNotes[0]);
+      if (data) {
+        const noteItems: Note[] = data.map(note => ({
+          id: note.id,
+          title: note.title || 'Untitled',
+          content: note.content || '',
+          created_at: note.created_at,
+          updated_at: note.updated_at,
+          isImportant: false // Default value since this field doesn't exist in database
+        }));
+        setNotes(noteItems);
       }
     } catch (error) {
       console.error('Error loading notes:', error);
-      toast({
-        title: "Error Loading Notes",
-        description: "Failed to load your notes",
-        variant: "destructive",
-      });
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      loadNotes();
+    }
+  }, [user, loadNotes]);
 
   const filteredNotes = notes.filter(note =>
     note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||

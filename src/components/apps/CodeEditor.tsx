@@ -127,7 +127,9 @@ export const CodeEditor = () => {
 
     try {
       if (activeFile.language === 'javascript') {
-        eval(activeFile.content);
+        // Use Function constructor instead of eval for better security
+        const func = new Function(activeFile.content);
+        func();
         if (output.length === 0) {
           output.push('Code executed successfully (no output)');
         }

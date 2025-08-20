@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Plus, Clock, MapPin, X, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,13 +33,7 @@ export const Calendar = () => {
   
   const { user } = useAuth();
 
-  useEffect(() => {
-    if (user) {
-      loadEvents();
-    }
-  }, [user, currentDate]);
-
-  const loadEvents = async () => {
+  const loadEvents = useCallback(async () => {
     if (!user) return;
     
     try {
@@ -51,30 +45,38 @@ export const Calendar = () => {
         .from('calendar_events')
         .select('*')
         .eq('user_id', user.id)
-        .gte('event_date', startOfMonth.toISOString().split('T')[0])
-        .lte('event_date', endOfMonth.toISOString().split('T')[0]);
+        .gte('start_time', startOfMonth.toISOString())
+        .lte('start_time', endOfMonth.toISOString())
+        .order('start_time', { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error loading events:', error);
+        return;
+      }
 
-      const formattedEvents: Event[] = data.map(event => ({
-        id: event.id,
-        title: event.title,
-        date: event.event_date,
-        time: event.event_time || '',
-        location: event.location || '',
-        description: event.description || ''
-      }));
-
-      setEvents(formattedEvents);
+      if (data) {
+        const calendarEvents: Event[] = data.map(event => ({
+          id: event.id,
+          title: event.title,
+          description: event.description || '',
+          date: new Date(event.start_time),
+          startTime: event.start_time.substring(11, 16),
+          endTime: event.end_time ? event.end_time.substring(11, 16) : '',
+          location: event.location || '',
+          color: event.color || 'blue'
+        }));
+        setEvents(calendarEvents);
+      }
     } catch (error) {
       console.error('Error loading events:', error);
-      toast({
-        title: "Error Loading Events",
-        description: "Failed to load calendar events",
-        variant: "destructive",
-      });
     }
-  };
+  }, [user, currentDate]);
+
+  useEffect(() => {
+    if (user) {
+      loadEvents();
+    }
+  }, [user, loadEvents]);
 
   const today = new Date();
   const currentMonth = currentDate.getMonth();

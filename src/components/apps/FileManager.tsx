@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Folder, File, Upload, Download, Trash2, Plus, Search, Shield, Eye, Edit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -33,13 +33,7 @@ export const FileManager = () => {
   const { user } = useAuth();
   const { isConnected } = useWallet();
 
-  useEffect(() => {
-    if (user) {
-      loadFiles();
-    }
-  }, [user]);
-
-  const loadFiles = async () => {
+  const loadFiles = useCallback(async () => {
     if (!user) return;
     
     try {
@@ -49,30 +43,35 @@ export const FileManager = () => {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error loading files:', error);
+        return;
+      }
 
-      const formattedFiles: FileItem[] = data.map(file => ({
-        id: file.id,
-        name: file.name,
-        type: file.is_folder ? 'folder' : 'file',
-        size: file.size || undefined,
-        modified: new Date(file.updated_at || file.created_at || ''),
-        isImportant: false, // You can add this field to your database if needed
-        path: file.path,
-        content: file.content || undefined,
-        file_type: file.type
-      }));
-
-      setFiles(formattedFiles);
+      if (data) {
+        const fileItems: FileItem[] = data.map(file => ({
+          id: file.id,
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          created: new Date(file.created_at),
+          modified: new Date(file.updated_at),
+          url: file.url,
+          isEncrypted: file.is_encrypted || false,
+          isImportant: file.is_important || false
+        }));
+        setFiles(fileItems);
+      }
     } catch (error) {
       console.error('Error loading files:', error);
-      toast({
-        title: "Error Loading Files",
-        description: "Failed to load your files from the database",
-        variant: "destructive",
-      });
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      loadFiles();
+    }
+  }, [user, loadFiles]);
 
   const filteredFiles = files.filter(file =>
     file.name.toLowerCase().includes(searchTerm.toLowerCase())

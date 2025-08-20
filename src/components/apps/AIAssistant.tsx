@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Copy, User, Bot, Sparkles, Download, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -33,13 +33,7 @@ export const AIAssistant = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  useEffect(() => {
-    if (user) {
-      loadChatHistory();
-    }
-  }, [user]);
-
-  const loadChatHistory = async () => {
+  const loadChatHistory = useCallback(async () => {
     if (!user) return;
     
     try {
@@ -67,7 +61,13 @@ export const AIAssistant = () => {
     } catch (error) {
       console.error('Error loading chat history:', error);
     }
-  };
+  }, [user, messages]);
+
+  useEffect(() => {
+    if (user) {
+      loadChatHistory();
+    }
+  }, [user, loadChatHistory]);
 
   const saveChatMessage = async (message: ChatMessage) => {
     if (!user) return;
