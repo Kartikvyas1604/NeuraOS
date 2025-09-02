@@ -202,8 +202,8 @@ export const CodeEditor = () => {
 
   return (
     <div className="h-full flex flex-col bg-slate-900 text-white">
-      {/* Header */}
-      <div className="border-b border-slate-700 p-4">
+      {/* Header - always visible, even when console is open */}
+      <div className="border-b border-slate-700 p-4 sticky top-0 z-20 bg-slate-900">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <Button onClick={createNewFile} size="sm" className="bg-blue-600 hover:bg-blue-700">
@@ -275,96 +275,6 @@ export const CodeEditor = () => {
             </button>
           ))}
         </div>
-      </div>
-
-      {/* Editor Area */}
-      <div className="flex-1 flex">
-        <div className={showAI ? 'flex-1' : 'w-full'}>
-          <Textarea
-            value={activeFile.content}
-            onChange={(e) => setActiveFile({...activeFile, content: e.target.value})}
-            placeholder="Start coding..."
-            className="w-full h-full resize-none bg-slate-800 border-none text-white font-mono text-sm leading-relaxed"
-            style={{ minHeight: '100%' }}
-          />
-        </div>
-
-        {showAI && (
-          <div className="w-80 border-l border-slate-700 bg-slate-800 p-4 flex flex-col">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold flex items-center">
-                <Sparkles className="h-4 w-4 mr-2" />
-                AI Assistant
-              </h3>
-              <Button onClick={() => setShowAI(false)} size="sm" variant="ghost">×</Button>
-            </div>
-            
-            <div className="space-y-3 flex-1">
-              <div className="grid grid-cols-1 gap-2">
-                <Button 
-                  onClick={() => askAI('explain')} 
-                  size="sm" 
-                  variant="outline"
-                  disabled={aiLoading}
-                  className="justify-start"
-                >
-                  <Lightbulb className="h-4 w-4 mr-2" />
-                  Explain Code
-                </Button>
-                <Button 
-                  onClick={() => askAI('fix')} 
-                  size="sm" 
-                  variant="outline"
-                  disabled={aiLoading}
-                  className="justify-start"
-                >
-                  <Bug className="h-4 w-4 mr-2" />
-                  Fix Bugs
-                </Button>
-                <Button 
-                  onClick={() => askAI('optimize')} 
-                  size="sm" 
-                  variant="outline"
-                  disabled={aiLoading}
-                  className="justify-start"
-                >
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  Optimize
-                </Button>
-              </div>
-              
-              <div className="space-y-2">
-                <Textarea
-                  placeholder="Ask AI about your code..."
-                  value={aiPrompt}
-                  onChange={(e) => setAiPrompt(e.target.value)}
-                  className="bg-slate-700 border-slate-600 text-white text-sm"
-                  rows={3}
-                />
-                <Button 
-                  onClick={() => askAI('custom')} 
-                  size="sm" 
-                  className="w-full bg-purple-600 hover:bg-purple-700"
-                  disabled={aiLoading || !aiPrompt.trim()}
-                >
-                  Ask AI
-                </Button>
-              </div>
-
-              {aiResponse && (
-                <div className="bg-slate-700 p-3 rounded text-sm max-h-64 overflow-auto">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium">AI Response:</span>
-                    <Button onClick={applyAISuggestion} size="sm" variant="ghost">
-                      Apply
-                    </Button>
-                  </div>
-                  <div className="whitespace-pre-wrap">{aiResponse}</div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Console */}
