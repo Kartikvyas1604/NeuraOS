@@ -117,7 +117,7 @@ export const WindowManager = ({
           }}
           onClick={() => onFocus(window.id)}
         >
-          {/* Window Header */}
+          {/* Window Header - always visible, never hidden or locked */}
           <div
             className="bg-black/30 border-b border-white/10 p-3 cursor-move flex items-center justify-between"
             onMouseDown={(e) => !window.isMaximized && handleDragStart(window.id, e)}
@@ -127,18 +127,21 @@ export const WindowManager = ({
               <button
                 onClick={() => onMinimize(window.id)}
                 className="p-1 hover:bg-white/20 rounded transition-colors"
+                aria-label="Minimize"
               >
                 <Minus className="h-3 w-3 text-white" />
               </button>
               <button
                 onClick={() => onMaximize(window.id)}
                 className="p-1 hover:bg-white/20 rounded transition-colors"
+                aria-label="Maximize"
               >
                 {window.isMaximized ? <Square className="h-3 w-3 text-white" /> : <Maximize2 className="h-3 w-3 text-white" />}
               </button>
               <button
                 onClick={() => onClose(window.id)}
                 className="p-1 hover:bg-red-500/50 rounded transition-colors"
+                aria-label="Close"
               >
                 <X className="h-3 w-3 text-white" />
               </button>

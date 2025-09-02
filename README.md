@@ -19,7 +19,7 @@ You can work locally using your preferred IDE. The only requirement is having No
 Steps:
 ```sh
 # Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+git clone https://github.com/Kartikvyas1604/NeuraOS.git
 
 # Step 2: Navigate to the project directory.
 cd NeuraOS

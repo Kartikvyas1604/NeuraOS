@@ -52,13 +52,10 @@ export const FileManager = () => {
         const fileItems: FileItem[] = data.map(file => ({
           id: file.id,
           name: file.name,
-          type: file.type,
+          type: file.is_folder ? 'folder' : 'file',
           size: file.size,
-          created: new Date(file.created_at),
+          path: file.path,
           modified: new Date(file.updated_at),
-          url: file.url,
-          isEncrypted: file.is_encrypted || false,
-          isImportant: file.is_important || false
         }));
         setFiles(fileItems);
       }
@@ -114,17 +111,18 @@ export const FileManager = () => {
         });
       }
 
-      // Always save metadata to Supabase
+      // Always save metadata to Supabase using upsert for reliability
       const { error } = await supabase
         .from('files')
-        .insert({
+        .upsert({
           user_id: user.id,
           name: pendingFile.name,
           type: pendingFile.type || 'application/octet-stream',
           size: pendingFile.size,
           path: `/uploads/${pendingFile.name}`,
           is_folder: false,
-          content: content || null
+          content: content || null,
+          updated_at: new Date().toISOString(),
         });
 
       if (error) throw error;
