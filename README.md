@@ -1,73 +1,75 @@
-# Welcome to your Lovable project
+# NeuraOS: Intelligent Web Operating System
 
-## Project info
+## Project Overview
 
-**URL**: https://lovable.dev/projects/2baf68a8-068a-4b8b-a8ae-be3d99623eec
+NeuraOS is a modern, intelligent web-based operating system designed to provide a desktop-like experience in the browser. It features a modular architecture, AI-powered tools, and seamless integration with cloud services and blockchain wallets.
 
-## How can I edit this code?
+### Key Features
+- Desktop environment with draggable windows and taskbar
+- Built-in apps: AI Assistant, Code Editor, File Manager, Notes, Calendar, Browser, Terminal, Settings, Wallet Connection
+- AI integration for code suggestions, note enhancement, and terminal queries
+- Supabase backend for authentication and data storage
+- Wallet integration for on-chain actions
+- Responsive UI built with React, TypeScript, Tailwind CSS, and shadcn-ui
 
-There are several ways of editing your application.
+## How to Run and Edit NeuraOS
 
-**Use Lovable**
+You can work locally using your preferred IDE. The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/2baf68a8-068a-4b8b-a8ae-be3d99623eec) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
+Steps:
 ```sh
 # Step 1: Clone the repository using the project's Git URL.
 git clone <YOUR_GIT_URL>
 
 # Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+cd NeuraOS
 
 # Step 3: Install the necessary dependencies.
-npm i
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Start the development server with auto-reloading and instant preview.
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+You can also edit files directly in GitHub or use GitHub Codespaces for cloud development.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
+## Technologies Used
 
 - Vite
 - TypeScript
 - React
 - shadcn-ui
 - Tailwind CSS
+- Supabase
 
 ## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/2baf68a8-068a-4b8b-a8ae-be3d99623eec) and click on Share -> Publish.
+You can deploy NeuraOS using your preferred static hosting provider (e.g., Vercel, Netlify, GitHub Pages). Build the project with:
+```sh
+npm run build
+```
+Then, follow your provider's instructions to deploy the `dist` folder.
 
-## Can I connect a custom domain to my Lovable project?
+## Project Structure
 
-Yes, you can!
+```
+NeuraOS/
+├── public/                # Static assets (favicon, robots.txt, etc.)
+├── src/
+│   ├── components/
+│   │   ├── apps/          # Built-in apps (AI Assistant, Code Editor, etc.)
+│   │   ├── ui/            # UI primitives and reusable components
+│   ├── hooks/             # Custom React hooks
+│   ├── integrations/      # External service clients (Gemini AI, Supabase)
+│   ├── lib/               # Utility functions and libraries
+│   ├── pages/             # Top-level pages (Index, NotFound)
+├── supabase/              # Supabase config and migrations
+├── img/                   # Images and screenshots
+├── index.html             # Main HTML entry point
+├── package.json           # Project metadata and dependencies
+├── README.md              # Project documentation
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Custom Domain Setup
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+You can connect a custom domain using your hosting provider's dashboard. Refer to their documentation for step-by-step instructions.
